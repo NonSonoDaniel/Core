@@ -118,7 +118,7 @@ module.exports = (app, config, themeConfig) => {
                     success: null,
                     state: {
                         error: null,
-                        data: "Getting User...",
+                        data: "Richiesta API...",
                     },
                 }
                 req.session.save(function (err) {})
@@ -149,24 +149,6 @@ module.exports = (app, config, themeConfig) => {
             /*
         Save user token in Assistants Secure Storage
         */
-
-            const isBlacklisted = await config?.blacklisted({ userId: OAuth2UserResponse.id }) || false
-            if (isBlacklisted) {
-                req.session.discordAuthStatus = {
-                    loading: false,
-                    success: false,
-                    state: {
-                        error: "blacklisted",
-                        data: null,
-                    },
-                }
-                req.session.user = {
-                    blacklisted: true
-                }
-                req.session.save(function (err) {})
-                return
-            }
-
 
             try {
                 req.AssistantsSecureStorage.SaveUser(
@@ -231,7 +213,7 @@ module.exports = (app, config, themeConfig) => {
                     success: null,
                     state: {
                         error: null,
-                        data: "Getting List of User Guilds...",
+                        data: "Autenticazione token univoco...",
                     },
                 }
                 req.session.save(function (err) {})
@@ -267,7 +249,7 @@ module.exports = (app, config, themeConfig) => {
                         success: null,
                         state: {
                             error: null,
-                            data: "Resolving guilds cache...",
+                            data: "Cercando i server...",
                         },
                     }
                     req.session.save(function (err) {})
@@ -304,7 +286,7 @@ module.exports = (app, config, themeConfig) => {
                     success: null,
                     state: {
                         error: null,
-                        data: "Authorizing user with guild...",
+                        data: "Richiesta dell'autorizzazione...",
                     },
                 }
                 req.session.save(function (err) {})

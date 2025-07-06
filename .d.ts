@@ -3,6 +3,7 @@ declare module "discord-dashboard" {
     const useLicense: (licenseId: string) => Promise<string>
     const UpdatedClass: () => Dashboard
 
+
     let Dashboard: any
 
     const initDashboard: (options: {
@@ -22,6 +23,8 @@ declare module "discord-dashboard" {
 
     const version: string
 }
+
+
 
 interface Permissions {
     CREATE_INSTANT_INVITE: ["CREATE_INSTANT_INVITE", 0x1]
@@ -86,10 +89,7 @@ interface Dashboard {
         bot: any
         theme: any
         settings: category[]
-        requiredPermissions?: object,
-        ownerIDs: array,
-        useTheme404: boolean,
-        useThemeMaintenance: boolean,
+        requiredPermissions?: object
         acceptPrivacyPolicy?: boolean
         noCreateServer?: boolean
         SSL?: {
@@ -264,7 +264,6 @@ interface formTypes {
         channelTypes?: string[],
         hideNSFW?: boolean,
         onlyNSFW?: boolean,
-        hideNoAccess?: boolean,
         themeOptions?: object
     ) => {
         type: string
@@ -279,7 +278,6 @@ interface formTypes {
         channelTypes?: string[],
         hideNSFW?: boolean,
         onlyNSFW?: boolean,
-        hideNoAccess?: boolean,
         themeOptions?: object
     ) => {
         type: string
@@ -292,7 +290,6 @@ interface formTypes {
     rolesSelect: (
         includeBots: boolean,
         disabled?: boolean,
-        hideHigherRoles?: boolean,
         themeOptions?: object
     ) => {
         type: string
@@ -305,7 +302,6 @@ interface formTypes {
         includeBots: boolean,
         disabled?: boolean,
         required?: boolean,
-        hideHigherRoles?: boolean,
         themeOptions?: object
     ) => {
         type: string

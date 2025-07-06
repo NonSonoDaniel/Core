@@ -132,29 +132,21 @@ module.exports = {
         channelTypes = ["GUILD_TEXT"],
         hideNSFW,
         onlyNSFW,
-        hideNoAccess,
         themeOptions = {}
     ) => {
         return {
             type: "channelsSelect",
-            function: (client, guildid, userid) => {
+            function: (client, guildid) => {
                 let listCount = {}
                 let list = {
                     "-": "",
                 }
-                const guild = client.guilds.cache.get(guildid)
-                const user = guild.members.cache.get(userid)
-                const bot = guild.members.cache.get(client.user.id)
                 client.guilds.cache
                     .get(guildid)
                     .channels.cache.forEach((channel) => {
                         if (!channelTypes.includes(channel.type)) return
                         if (hideNSFW && channel.nsfw) return
                         if (onlyNSFW && !channel.nsfw) return
-                        if (hideNoAccess) {
-                            if (!user.permissionsIn(channel).has('0x800') || !user.permissionsIn(channel).has('0x400')) return
-                            if (!bot.permissionsIn(channel).has('0x800') || !bot.permissionsIn(channel).has('0x800')) return
-                        } 
                         listCount[channel.name]
                             ? (listCount[channel.name] =
                                   listCount[channel.name] + 1)
@@ -194,27 +186,21 @@ module.exports = {
         channelTypes = ["GUILD_TEXT"],
         hideNSFW,
         onlyNSFW,
-        hideNoAccess,
         themeOptions = {}
     ) => {
         return {
             type: "channelsMultiSelect",
-            function: (client, guildid, userid) => {
+            function: (client, guildid) => {
                 let listCount = {}
-                let list = {}
-                const guild = client.guilds.cache.get(guildid)
-                const user = guild.members.cache.get(userid)
-                const bot = guild.members.cache.get(client.user.id)
+                let list = {
+                    "-": "",
+                }
                 client.guilds.cache
                     .get(guildid)
                     .channels.cache.forEach((channel) => {
                         if (!channelTypes.includes(channel.type)) return
                         if (hideNSFW && channel.nsfw) return
                         if (onlyNSFW && !channel.nsfw) return
-                        if (hideNoAccess) {
-                            if (!user.permissionsIn(channel).has('0x800') || !user.permissionsIn(channel).has('0x400')) return
-                            if (!bot.permissionsIn(channel).has('0x800') || !bot.permissionsIn(channel).has('0x800')) return
-                        } 
                         listCount[channel.name]
                             ? (listCount[channel.name] =
                                   listCount[channel.name] + 1)
@@ -249,39 +235,40 @@ module.exports = {
             themeOptions,
         }
     },
-    rolesMultiSelect: (disabled, required, includeBots, hideHigherRoles, themeOptions = {}) => {
+    rolesMultiSelect: (disabled, required, includeBots, themeOptions = {}) => {
         return {
             type: "rolesMultiSelect",
-            function: (client, guildid, userid) => {
+            function: (client, guildid) => {
                 let listCount = {}
-                const list = []
-                const guild = client.guilds.cache.get(guildid)
-                const user = guild.members.cache.get(userid)
-                const bot = guild.members.cache.get(client.user.id)
-
+                let list = {
+                    "-": "",
+                }
                 client.guilds.cache.get(guildid).roles.cache.forEach((role) => {
                     if (role.managed && !includeBots) return
-                    if (role.id === guildid) return // @everyone role
-                    if (hideHigherRoles) {
-                        if (role.position >= user.roles.highest.position) return
-                        if (role.position >= bot.roles.highest.position) return
-                    }
                     listCount[role.name]
                         ? (listCount[role.name] = listCount[role.name] + 1)
                         : (listCount[role.name] = 1)
-                    if (listCount[role.name] > 1)
-                        list.push({ key: `${role.name} (${listCount[role.name]})`, value: role.id, position: role.position })
-                    else list.push({ key: role.name, value: role.id, position: role.position })
+                    if (list[role.name])
+                        list[`${role.name} (${listCount[role.name]})`] = role.id
+                    else list[role.name] = role.id
                 })
 
-                list.sort((a, b) => b.position - a.position)
+                let myObj = list
+                let keys = Object.keys(myObj),
+                    i = null,
+                    len = keys.length
 
-                const sortedList = {}
-                list.forEach(({ key, value }) => (sortedList[key] = value))
+                keys.sort()
+                list = {}
+
+                for (i = 0; i < len; i++) {
+                    k = keys[i]
+                    list[k] = myObj[k]
+                }
 
                 return {
-                    values: Object.values(sortedList),
-                    keys: Object.keys(sortedList),
+                    values: Object.values(list),
+                    keys: Object.keys(list),
                 }
             },
             disabled,
@@ -289,38 +276,42 @@ module.exports = {
             themeOptions,
         }
     },
-    rolesSelect: (disabled, includeBots, hideHigherRoles, themeOptions = {}) => {
+    rolesSelect: (disabled, includeBots, themeOptions = {}) => {
         return {
             type: "rolesSelect",
-            function: (client, guildid, userid) => {
+            function: (client, guildid) => {
                 let listCount = {}
-                const list = [{ key: '-', value: '' }]
-                const guild = client.guilds.cache.get(guildid)
-                const user = guild.members.cache.get(userid)
-                const bot = guild.members.cache.get(client.user.id)
+                let list = {
+                    "-": "",
+                }
                 client.guilds.cache.get(guildid).roles.cache.forEach((role) => {
                     if (role.managed && !includeBots) return
+
                     if (role.id === guildid) return // @everyone role
-                    if (hideHigherRoles) {
-                        if (role.position >= user.roles.highest.position) return
-                        if (role.position >= bot.roles.highest.position) return
-                    }
                     listCount[role.name]
                         ? (listCount[role.name] = listCount[role.name] + 1)
                         : (listCount[role.name] = 1)
-                    if (listCount[role.name] > 1)
-                        list.push({ key: `${role.name} (${listCount[role.name]})`, value: role.id, position: role.position })
-                    else list.push({ key: role.name, value: role.id, position: role.position })
+                    if (list[role.name])
+                        list[`${role.name} (${listCount[role.name]})`] = role.id
+                    else list[role.name] = role.id
                 })
 
-                list.sort((a, b) => b.position - a.position)
+                let myObj = list
+                let keys = Object.keys(myObj),
+                    i = null,
+                    len = keys.length
 
-                const sortedList = {}
-                list.forEach(({ key, value }) => (sortedList[key] = value))
+                keys.sort()
+                list = {}
+
+                for (i = 0; i < len; i++) {
+                    k = keys[i]
+                    list[k] = myObj[k]
+                }
 
                 return {
-                    values: Object.values(sortedList),
-                    keys: Object.keys(sortedList),
+                    values: Object.values(list),
+                    keys: Object.keys(list),
                 }
             },
             disabled,

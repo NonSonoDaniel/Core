@@ -65,8 +65,6 @@ module.exports = (app, config, themeConfig) => {
         "/guild/:id",
         RateFunctions.guildPage ? RateFunctions.guildPage : NoRL,
         async (req, res) => {
-            res.redirect("/settings/" + req.params.id)
-
             if (!req.session.user)
                 return res.redirect("/discord?r=/guild/" + req.params.id)
             let customThemeOptions
@@ -83,7 +81,7 @@ module.exports = (app, config, themeConfig) => {
             if (!bot.guilds.cache.get(req.params.id)) {
                 try {
                     await bot.guilds.fetch(req.params.id)
-                } catch (err) { }
+                } catch (err) {}
             }
 
             if (!bot.guilds.cache.get(req.params.id))
@@ -97,7 +95,7 @@ module.exports = (app, config, themeConfig) => {
                     await bot.guilds.cache
                         .get(req.params.id)
                         .members.fetch(req.session.user.id)
-                } catch (err) { }
+                } catch (err) {}
             }
             for (let PermissionRequired of req.requiredPermissions) {
                 let converted = PermissionRequired[0]
@@ -115,17 +113,19 @@ module.exports = (app, config, themeConfig) => {
                     return res.redirect("/manage?error=noPermsToManageGuild")
             }
 
-            if (bot.guilds.cache.get(req.params.id).channels.cache.size < 1) {
-                try {
-                    await bot.guilds.cache.get(req.params.id).channels.fetch()
-                } catch (err) { }
+            try {
+                await bot.guilds.cache.get(req.params.id).channels.fetch();
+            } catch (err) {
+                console.error('Errore durante il fetch dei canali:', err);
             }
+            
 
-            if (bot.guilds.cache.get(req.params.id).roles.cache.size < 2) {
-                try {
-                    await bot.guilds.cache.get(req.params.id).roles.fetch()
-                } catch (err) { }
+            try {
+                await bot.guilds.cache.get(req.params.id).roles.fetch();
+            } catch (err) {
+                console.error('Errore durante il fetch dei canali:', err);
             }
+            
 
             let actual = {}
 
@@ -236,7 +236,7 @@ module.exports = (app, config, themeConfig) => {
                                     }
                                     if (
                                         !actual[category.categoryId][
-                                        option.optionId
+                                            option.optionId
                                         ]
                                     ) {
                                         actual[category.categoryId][
@@ -369,10 +369,10 @@ module.exports = (app, config, themeConfig) => {
                     setNewRes = { error: canUse.errorMessage }
                     errors.push(
                         option.optionName +
-                        "%is%" +
-                        setNewRes.error +
-                        "%is%" +
-                        option.optionId
+                            "%is%" +
+                            setNewRes.error +
+                            "%is%" +
+                            option.optionId
                     )
                 } else if (option.optionType != "spacer") {
                     if (config.useCategorySet) {
@@ -488,10 +488,10 @@ module.exports = (app, config, themeConfig) => {
                                 if (setNewRes.error) {
                                     errors.push(
                                         option.optionName +
-                                        "%is%" +
-                                        setNewRes.error +
-                                        "%is%" +
-                                        option.optionId
+                                            "%is%" +
+                                            setNewRes.error +
+                                            "%is%" +
+                                            option.optionId
                                     )
                                 } else {
                                     successes.push(option.optionName)
@@ -514,10 +514,10 @@ module.exports = (app, config, themeConfig) => {
                                 if (setNewRes.error) {
                                     errors.push(
                                         option.optionName +
-                                        "%is%" +
-                                        setNewRes.error +
-                                        "%is%" +
-                                        option.optionId
+                                            "%is%" +
+                                            setNewRes.error +
+                                            "%is%" +
+                                            option.optionId
                                     )
                                 } else {
                                     successes.push(option.optionName)
@@ -538,10 +538,10 @@ module.exports = (app, config, themeConfig) => {
                                 if (setNewRes.error) {
                                     errors.push(
                                         option.optionName +
-                                        "%is%" +
-                                        setNewRes.error +
-                                        "%is%" +
-                                        option.optionId
+                                            "%is%" +
+                                            setNewRes.error +
+                                            "%is%" +
+                                            option.optionId
                                     )
                                 } else {
                                     successes.push(option.optionName)
@@ -573,10 +573,10 @@ module.exports = (app, config, themeConfig) => {
                                     if (setNewRes.error) {
                                         errors.push(
                                             option.optionName +
-                                            "%is%" +
-                                            setNewRes.error +
-                                            "%is%" +
-                                            option.optionId
+                                                "%is%" +
+                                                setNewRes.error +
+                                                "%is%" +
+                                                option.optionId
                                         )
                                     } else {
                                         successes.push(option.optionName)
@@ -598,10 +598,10 @@ module.exports = (app, config, themeConfig) => {
                                     if (setNewRes.error) {
                                         errors.push(
                                             option.optionName +
-                                            "%is%" +
-                                            setNewRes.error +
-                                            "%is%" +
-                                            option.optionId
+                                                "%is%" +
+                                                setNewRes.error +
+                                                "%is%" +
+                                                option.optionId
                                         )
                                     } else {
                                         successes.push(option.optionName)
@@ -629,10 +629,10 @@ module.exports = (app, config, themeConfig) => {
                                 if (setNewRes.error) {
                                     errors.push(
                                         option.optionName +
-                                        "%is%" +
-                                        setNewRes.error +
-                                        "%is%" +
-                                        option.optionId
+                                            "%is%" +
+                                            setNewRes.error +
+                                            "%is%" +
+                                            option.optionId
                                     )
                                 } else {
                                     successes.push(option.optionName)
@@ -658,10 +658,10 @@ module.exports = (app, config, themeConfig) => {
                                     if (setNewRes.error) {
                                         errors.push(
                                             option.optionName +
-                                            "%is%" +
-                                            setNewRes.error +
-                                            "%is%" +
-                                            option.optionId
+                                                "%is%" +
+                                                setNewRes.error +
+                                                "%is%" +
+                                                option.optionId
                                         )
                                     } else {
                                         successes.push(option.optionName)
@@ -685,10 +685,10 @@ module.exports = (app, config, themeConfig) => {
                                     if (setNewRes.error) {
                                         errors.push(
                                             option.optionName +
-                                            "%is%" +
-                                            setNewRes.error +
-                                            "%is%" +
-                                            option.optionId
+                                                "%is%" +
+                                                setNewRes.error +
+                                                "%is%" +
+                                                option.optionId
                                         )
                                     } else {
                                         successes.push(option.optionName)
@@ -716,10 +716,10 @@ module.exports = (app, config, themeConfig) => {
                                 if (setNewRes.error) {
                                     errors.push(
                                         option.optionName +
-                                        "%is%" +
-                                        setNewRes.error +
-                                        "%is%" +
-                                        option.optionId
+                                            "%is%" +
+                                            setNewRes.error +
+                                            "%is%" +
+                                            option.optionId
                                     )
                                 } else {
                                     successes.push(option.optionName)
@@ -741,10 +741,10 @@ module.exports = (app, config, themeConfig) => {
                                 if (setNewRes.error) {
                                     errors.push(
                                         option.optionName +
-                                        "%is%" +
-                                        setNewRes.error +
-                                        "%is%" +
-                                        option.optionId
+                                            "%is%" +
+                                            setNewRes.error +
+                                            "%is%" +
+                                            option.optionId
                                     )
                                 } else {
                                     successes.push(option.optionName)

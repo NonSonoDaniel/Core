@@ -61,16 +61,6 @@ The project is covered by a **Shareware (CC BY-NC-SA 4.0) licence**. This means 
 
 #### You can generate OpenSource License there: https://licenses.assistantscenter.com/
 
-# Star History
-
-<a href="https://star-history.com/#Discord-Dashboard/Core&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Discord-Dashboard/Core&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Discord-Dashboard/Core&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Discord-Dashboard/Core&type=Date" />
- </picture>
-</a>
-
 # v3 Info
 
 The v3 version of the project designed using solutions like Fastify+Next.js is coming!
